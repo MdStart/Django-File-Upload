@@ -1,0 +1,132 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    function ValidateExtension() {
+        var allowedFiles = [".doc", ".docx", ".pdf", ".jpg", ".png"];
+                var fileUpload = document.getElementById("save");
+{#        for (var i = 0, j = save.length; i < j; i++) {#}
+{#            var fileUpload = save[i];#}
+            var lblError = document.getElementById("lblError");
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            if (!regex.test(fileUpload.value.toLowerCase())) {
+                lblError.innerHTML = "Please upload files having extensions: <b>" + allowedFiles.join(', ') + "</b> only.";
+                return false;
+            }
+            lblError.innerHTML = "";
+            return true;
+
+    }
+</script>
+
+
+<div class="container"> <br />
+    <div class="row">
+
+    	<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading"><strong>Upload files</strong> <small> </small></div>
+				<div class="panel-body">
+
+				<form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+					<div class="input-group image-preview">
+						<input placeholder="" id="file_name" type="text" class="form-control image-preview-filename" >
+						<!-- don't give a name === doesn't send on POST/GET -->
+						<span class="input-group-btn">
+						<!-- image-preview-clear button -->
+						<button type="button" class="btn btn-default image-preview-clear" style="display:none;"> <span class="glyphicon glyphicon-remove"></span> Clear </button>
+						<!-- image-preview-input -->
+						<div class="btn btn-default image-preview-input"> <span class="glyphicon glyphicon-folder-open"></span> <span class="image-preview-input-title">Browse</span>
+							<input type="file" id="save" name="savefile" onchange="document.getElementById('file_name').value = this.value.split('\\').pop().split('/').pop()" />
+							<!-- rename it -->
+						</div>
+						<button type="submit" onclick="return ValidateExtension()" class="btn btn-labeled btn-primary"> <span class="btn-label"><i class="glyphicon glyphicon-upload"></i> </span>Upload</button>
+						</span> </div>
+						<br />
+                       <span id="lblError" style="color: red;"></span>
+                       <br />
+					   {% if messages %}
+                      <ul class="messages">
+                     {% for message in messages %}
+                      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                   {% endfor %}
+                  </ul>
+                 {% endif %}
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+
+	</div>
+</div>
+
+
+<style>
+/* layout.css Style */
+.upload-drop-zone {
+  height: 200px;
+  border-width: 2px;
+  margin-bottom: 20px;
+}
+
+/* skin.css Style*/
+.upload-drop-zone {
+  color: #ccc;
+  border-style: dashed;
+  border-color: #ccc;
+  line-height: 200px;
+  text-align: center
+}
+.upload-drop-zone.drop {
+  color: #222;
+  border-color: #222;
+}
+
+
+
+.image-preview-input {
+    position: relative;
+    overflow: hidden;
+    margin: 0px;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.image-preview-input input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+.image-preview-input-title {
+    margin-left:2px;
+}
+</style>
+
+
+{% if upladed_url %}
+
+  {% endif %}
+
+
+
+{% endblock %}
